@@ -10,14 +10,21 @@ import static java.lang.System.in;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException {
-        Socket clientSocket = new Socket("localhost", 8089);
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    public static void main(String[] args) {
+        try (Socket clientSocket = new Socket("localhost", 8089);
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
-        out.println("Hello");
-        String name = in.readLine();
-        System.out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+
+            out.println("Hello");
+
+
+            String name = in.readLine();
+            System.out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+
+        } catch (IOException e) {
+            System.err.println("Error occurred while communicating with the server: " + e.getMessage());
+        }
     }
 }
 
